@@ -88,7 +88,11 @@
             <artifactId>mybatis</artifactId>
             <version>3.4.5</version>
         </dependency>
-
+        <dependency>
+            <groupId>javax.sql</groupId>
+            <artifactId>javax.sql-api</artifactId>
+            <version>1.0</version>
+        </dependency>
     </dependencies>
 
     <build>
