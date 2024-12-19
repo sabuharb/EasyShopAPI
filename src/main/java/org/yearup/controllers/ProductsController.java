@@ -49,6 +49,7 @@ public class ProductsController {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND);
 
             return product;
+
         } catch(Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
         }
@@ -70,6 +71,7 @@ public class ProductsController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void updateProduct(@PathVariable int id, @RequestBody Product product) {
         try {
+
             productDao.update(id, product);
         } catch(Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");

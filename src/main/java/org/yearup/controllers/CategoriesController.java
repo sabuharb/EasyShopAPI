@@ -2,6 +2,7 @@ package org.yearup.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -87,11 +88,12 @@ public class CategoriesController {
 
     // Delete a category. Admins only (again).
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @RequestMapping(path = "{id}", method = RequestMethod.DELETE)
-    @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void deleteCategory(@PathVariable int id) {
+    @RequestMapping(path = "{id}")
+    @ResponseStatus(code = HttpStatus.NO_CONTENT)
+    public ResponseEntity<Void> deleteCategory(@PathVariable int id) {
         try {
             categoryDao.delete(id);
+            return ResponseEntity.noContent().build();
         } catch (Exception ex) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,
                     "An error occurred while deleting the category with ID " + id + ". Is this category clinging on for dear life?");
