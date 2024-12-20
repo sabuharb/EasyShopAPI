@@ -1,6 +1,7 @@
 
+![logo1](https://github.com/user-attachments/assets/2773a289-64a9-4227-a938-0b408428028a)
 
-# **EasyShop API**
+
 
 ## **Project Overview**
 
