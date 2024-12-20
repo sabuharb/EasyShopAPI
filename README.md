@@ -138,6 +138,4 @@ All actions were successfully tested, ensuring the API behaves as expected.
    - Build user profile management.
    - Develop the checkout process.
 
----
 
-This README provides a clear and visually appealing representation of the EasyShop API for reviewers and developers. Let me know if you’d like to refine it further!
