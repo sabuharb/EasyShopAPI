@@ -50,8 +50,7 @@ public class AuthenticationController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = tokenProvider.createToken(authentication, false);
 
-        try
-        {
+        try {
             User user = userDao.getByUserName(loginDto.getUsername());
 
             if (user == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
@@ -59,40 +58,38 @@ public class AuthenticationController {
             HttpHeaders httpHeaders = new HttpHeaders();
             httpHeaders.add(JWTFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
             return new ResponseEntity<>(new LoginResponseDto(jwt, user), httpHeaders, HttpStatus.OK);
-        }
-        catch(Exception ex)
-        {
+        } catch (Exception ex) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
         }
     }
 
+
     @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public ResponseEntity<User> register(@Valid @RequestBody RegisterUserDto newUser) {
-
-        try
-        {
+        try {
+            System.out.println("Registering user: " + newUser.getUsername());
+            // Check if the user already exists
             boolean exists = userDao.exists(newUser.getUsername());
-            if (exists)
-            {
+            System.out.println("User exists: " + exists);
+
+            if (exists) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User Already Exists.");
             }
 
-            // create user
+            // Create user
             User user = userDao.create(new User(0, newUser.getUsername(), newUser.getPassword(), newUser.getRole()));
+            System.out.println("User created: " + user.getUsername());
 
-            // create profile
+            // Create profile
             Profile profile = new Profile();
             profile.setUserId(user.getId());
             profileDao.create(profile);
 
             return new ResponseEntity<>(user, HttpStatus.CREATED);
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
+            e.printStackTrace();
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
         }
     }
-
 }
-

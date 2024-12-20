@@ -12,6 +12,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+
+
 @Component
 public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao {
 
@@ -21,14 +23,18 @@ public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao {
 
     @Override
     public List<Category> getAllCategories() {
-        List<Category> categories = new ArrayList<>();
         String sql = "SELECT * FROM categories";
+        List<Category> categories = new ArrayList<>();
 
         try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(sql);
              ResultSet rs = statement.executeQuery()) {
             while (rs.next()) {
-                categories.add(mapRow(rs));
+                categories.add(new Category(
+                        rs.getInt("category_id"),
+                        rs.getString("name"),
+                        rs.getString("description")
+                ));
             }
         } catch (SQLException e) {
             throw new RuntimeException("Error fetching categories", e);
@@ -45,7 +51,11 @@ public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao {
             statement.setInt(1, categoryId);
             ResultSet rs = statement.executeQuery();
             if (rs.next()) {
-                return mapRow(rs);
+                return new Category(
+                        rs.getInt("category_id"),
+                        rs.getString("name"),
+                        rs.getString("description")
+                );
             }
         } catch (SQLException e) {
             throw new RuntimeException("Error fetching category by ID", e);
@@ -67,6 +77,7 @@ public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao {
                 category.setCategoryId(rs.getInt(1));
             }
         } catch (SQLException e) {
+            e.printStackTrace();
             throw new RuntimeException("Error creating category", e);
         }
         return category;

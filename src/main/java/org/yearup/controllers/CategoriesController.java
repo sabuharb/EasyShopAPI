@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import org.yearup.data.CategoryDao;
 import org.yearup.data.ProductDao;
+import org.yearup.data.mysql.MySqlCategoryDao;
 import org.yearup.models.Category;
 import org.yearup.models.Product;
 
@@ -21,8 +22,8 @@ import java.util.List;
 // add annotation to allow cross site origin requests
 @CrossOrigin
 public class CategoriesController {
-    private CategoryDao categoryDao;
-    private ProductDao productDao;
+    private final CategoryDao categoryDao;
+    private final ProductDao productDao;
 
 
     // create an Autowired controller to inject the categoryDao and ProductDao
@@ -33,15 +34,23 @@ public class CategoriesController {
     }
 
     // Fetch all categories.
-    @GetMapping("")
+    @GetMapping
+    @PreAuthorize("permitAll()")
     public List<Category> getAll() {
         return categoryDao.getAllCategories();
     }
 
     // Get a specific category by ID.
     @GetMapping("{id}")
+    @PreAuthorize("permitAll()")
     public Category getById(@PathVariable int id) {
-        Category category = categoryDao.getById(id);
+
+        Category category = null;
+        try {
+            category = categoryDao.getById(id);
+        } catch (Exception e){
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "not working");
+        }
 
         if (category == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Category with ID " + id + " not found. Are you sure it exists?");
@@ -68,6 +77,7 @@ public class CategoriesController {
         try {
             return categoryDao.create(category);
         } catch (Exception ex) {
+            ex.printStackTrace();
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,
                     "An error occurred while adding the category. Please check your inputs and give it another shot.");
         }
