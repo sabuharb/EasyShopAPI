@@ -1,6 +1,4 @@
-To make your README visually appealing on GitHub, we can structure it with proper Markdown formatting, consistent headings, lists, and embedded images. Below is the updated and formatted version that looks professional and "pretty":
 
----
 
 # **EasyShop API**
 
